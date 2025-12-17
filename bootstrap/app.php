@@ -21,6 +21,12 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'login',    // Izinkan login tanpa CSRF di Postman
+            'posts',    // Izinkan pembuatan post
+            'posts/*',  // Izinkan update/delete
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
