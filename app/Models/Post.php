@@ -15,11 +15,22 @@ class Post extends Model
 
     protected $fillable = ['user_id', 'title', 'content', 'is_draft', 'published_at'];
 
+    protected function casts(): array
+    {
+        return [
+            'is_draft' => 'boolean',
+            'published_at' => 'datetime',
+        ];
+    }
+
     // implemenet method scope where post active
     public function scopeActive($query)
     {
         return $query->where('is_draft', false)
-            ->where('published_at', '<=', now());
+            ->where(function ($q) {
+                $q->where('published_at', '<=', now())
+                    ->orWhereNull('published_at');
+            });
     }
 
     // relation
